@@ -1,0 +1,60 @@
+<Query>
+
+<TagName>
+select * from Course inner Join Program  on Program.ProgramId = Course.CourseId
+where Program.ProgramCode='Java'
+</TagName>
+
+<LogInInsertUpdate>
+Select  *  from UserBookingDetalis
+
+</LogInInsertUpdate>
+
+	<ValidateUser>
+	Select UserId, UserName,Email from Users where UserName = '_UserName_'  and Password = '_Password_'
+	</ValidateUser>
+
+  <ValidUserOrNot>
+    Select UserName  from Login where UserName = '_UserName_'
+  </ValidUserOrNot>
+
+
+</Query>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE [dbo].[Login] (
+    [Id]          INT           NOT NULL,
+    [UserName]    VARCHAR (50)  NULL,
+    [FirstName]   VARCHAR (50)  NULL,
+    [LastName]    VARCHAR (50)  NULL,
+    [Email]       NVARCHAR (50) NULL,
+    [CreatedBy]   INT           NULL,
+    [CreatedDate] DATE          NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+GO
+
