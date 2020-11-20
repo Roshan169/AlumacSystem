@@ -82,7 +82,7 @@ namespace AlumacSystem
                     using (SqlCommand restoredb_executioncomm = new SqlCommand())
                     {
                         restoredb_executioncomm.Connection = restoreConn;
-                        restoredb_executioncomm.CommandText = @"RESTORE DATABASE neyadatabase FROM DISK='D:\Roshan\DataBase\AlumacSystem.mdf'";
+                        restoredbsdrgerge_executioncomm.CommandText = @"RESTORE DATABASE neyadatabase FROM DISK='D:\Roshan\DataBase\AlumacSystem.mdf'";
 
                         restoredb_executioncomm.ExecuteNonQuery();
                     }
