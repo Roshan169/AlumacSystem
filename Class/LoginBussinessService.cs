@@ -21,7 +21,7 @@ namespace AngulerTest.Class
         con.Open();
 
         GenerateQuery generateQuery = new GenerateQuery();
-        Query = generateQuery.GetQueryViaFileAndTagName("LogIn.xml", "LogInInsertUpdate");
+        Query = generateQuery.GetQueryViaFileAndTagName("test.xml", "LogInInsertUpdate");
 
       }
       catch (Exception ex)

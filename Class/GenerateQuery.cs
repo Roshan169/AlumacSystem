@@ -1,3 +1,4 @@
+using AlumacSystem;
 using AngulerTest.Class;
 using System;
 using System.Collections.Generic;
@@ -15,20 +16,17 @@ namespace AngulerTest.Class
     {
         SqlConnection Connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AlumacSystem;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
-
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public long UserId { get; set; }
-
-
         public string GetQueryViaFileAndTagName(string FileName, string TagName)
         {
             try
             {
-                Connection.Open();
+                if (Connection == null)
+                {
+                    Connection.Open();
+                }
                 string Query = "";
-                FileName = "Query//" + FileName;
-                string FilePath = AppDomain.CurrentDomain.BaseDirectory + FileName;
+                string FolderInsideFileName  = @"Query\" + FileName;
+                string FilePath = AppDomain.CurrentDomain.BaseDirectory + FolderInsideFileName;
                 foreach (XElement obj in XElement.Load(FilePath).Elements(TagName))
                 {
                     Query = obj.Value.ToString();
@@ -41,42 +39,104 @@ namespace AngulerTest.Class
                 string msg = ex.Message;
                 return "";
             }
-
             finally
             {
                 Connection.Close();
             }
-
         }
-        public string  SinglevalueViaQuery(string Query, string[,] ReplaceValues, IDbConnection IDbConnection)
+
+        public long GetSingleNumericValueViaQuery(string Query, string[,] ReplaceValues, IDbConnection IDbConnection)
         {
-
-            string Result = "";
+            long Result = 0;
             string sqlQuery = Query;
-
-            if (ReplaceValues != null)
+            try
             {
-                if (ReplaceValues.Length > 0)
+                if (Connection == null)
                 {
-                    for (int i = 0; i <= ReplaceValues.GetUpperBound(0); i++)
+                    Connection.Open();
+                }
+                if (ReplaceValues != null)
+                {
+                    if (ReplaceValues.Length > 0)
                     {
-                        sqlQuery = sqlQuery.Replace(ReplaceValues[i, 0], ReplaceValues[i, 1]);
+                        for (int i = 0; i <= ReplaceValues.GetUpperBound(0); i++)
+                        {
+                            sqlQuery = sqlQuery.Replace(ReplaceValues[i, 0], ReplaceValues[i, 1]);
+                        }
                     }
                 }
+                SqlCommand command = new SqlCommand(sqlQuery, Connection);
+                command.CommandText = sqlQuery;
+                string message = "";
+                for (int i = 0; i < command.Parameters.Count; i++)
+                {
+                    message += command.Parameters[i].ToString() + "\n";
+                }
+                object value = command.ExecuteScalar();
+                if (value != null)
+                {
+                    Result = Convert.ToInt64(value);
+                }
+                return Result;
             }
-            //IDbCommand DBCommand = ConnectDB.ConnectDBCommand(sqlQuery, IDbConnection, DBSource);
-            IDbCommand DBCommand = Connection.CreateCommand();
-            object value = DBCommand.ExecuteScalar();
-
-            if (value != null)
+            catch (Exception ex)
             {
-                Result = Convert.ToString(value);
+                string msg = ex.Message;
+                return 0;
             }
-            return Result;
+            finally
+            {
+                Connection.Close();
+            }
         }
-        public void CollectionOfDataSetViaQuery(string sqlQuery)
-        {
 
+        public string GetSingleStringValueViaQuery(string Query, string[,] ReplaceValues, IDbConnection IDbConnection)
+        {
+            string Result = "";
+            string sqlQuery = Query;
+            try
+            {
+                if (Connection == null)
+                {
+                    Connection.Open();
+                }
+                if (ReplaceValues != null)
+                {
+                    if (ReplaceValues.Length > 0)
+                    {
+                        for (int i = 0; i <= ReplaceValues.GetUpperBound(0); i++)
+                        {
+                            sqlQuery = sqlQuery.Replace(ReplaceValues[i, 0], ReplaceValues[i, 1]);
+                        }
+                    }
+                }
+                SqlCommand command = new SqlCommand(sqlQuery, Connection);
+                command.CommandText = sqlQuery;
+                string message = "";
+                for (int i = 0; i < command.Parameters.Count; i++)
+                {
+                    message += command.Parameters[i].ToString() + "\n";
+                }
+                object value = command.ExecuteScalar();
+                if (value != null)
+                {
+                    Result = Convert.ToString(value);
+                }
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+                return null;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public DataTable GetCollectionOfDataSetViaQuery(string sqlQuery)
+        {
             try
             {
                 if (Connection == null)
@@ -85,102 +145,139 @@ namespace AngulerTest.Class
                 }
 
                 DataTable DataTable = new DataTable("DataTable");
-                //IDataAdapter IDA_DataAdaptor = Connection.Conn(sqlQuery, IDbConnection, DBSource);
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-                sqlDataAdapter.SelectCommand = new SqlCommand(sqlQuery);
-                DataSet DataSet = new DataSet();
-                //IDA_DataAdaptor.Fill(DataSet);
-                sqlDataAdapter.Fill(DataSet);
-                if (DataSet != null)
+                SqlDataAdapter adapter = new SqlDataAdapter(sqlQuery, Connection);
+                DataSet dataSetObj = new DataSet();
+                adapter.Fill(dataSetObj);
+                if (dataSetObj != null)
                 {
-                    DataTable = DataSet.Tables[0];
+                    DataTable = dataSetObj.Tables[0];
                 }
-                //return DataTable;
+                return DataTable;
             }
-
             catch (Exception ex)
             {
-                string ErrorMsg = ex.Message;
+                string msg = ex.Message;
+                return null;
+            }
+            finally
+            {
+                Connection.Close();
             }
 
         }
-        //public HomeInformation CollectionOfDataViaQuery(string sqlQuery)
-        //{
-        //    HomeInformation homeInformationObj = new HomeInformation();
 
-        //    //string Result = "";
-        //    //string sqlQuery = GetQueryViaFileAndTagName("", "");
-
-        //    //IDataAdapter IDA_DataAdaptor = Connection.Conn(sqlQuery, IDbConnection, DBSource);
-        //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-        //    sqlDataAdapter.SelectCommand = new SqlCommand(sqlQuery);
-        //    DataTable DataTable = new DataTable();
-        //    //IDA_DataAdaptor.Fill(DataSet);
-        //    sqlDataAdapter.Fill(DataTable);
-
-        //    if (DataTable != null)
-        //    {
-        //        List<HomeInformation> InfoArray = (from DataRow dr in DataTable.Rows
-        //                                           select new HomeInformation()
-        //                                           {
-        //                                               Id = Convert.ToInt64(dr["ManifestTypeId"]),
-        //                                               Name = Convert.ToString(dr["ManifestType"]),
-        //                                           }).ToList();
-        //        if (InfoArray.Count > 0)
-        //            homeInformationObj.HomeInformationCollection = InfoArray;
-        //    }
-
-        //    return homeInformationObj;
-        //}
-        public void CollectionSearchDataViaQuery(string sqlQuery, string[,] ReplaceValues, string[] fieldNames, string[] values, string WhereClause)
+        public Registration GetCollectionOfDataViaQuery(string sqlQuery)
         {
-            string sqlWhereClause = WhereClause;
-
-            if (fieldNames != null && values != null)
+            Registration homeInformationObj = new Registration();
+            try
             {
-                for (int i = 0; i < fieldNames.Length; i++)
+                if (Connection == null)
                 {
-                    sqlWhereClause += " and " + fieldNames[i] + " = '" + values[i].Trim() + "'";
+                    Connection.Open();
                 }
-            }
+                sqlQuery = GetQueryViaFileAndTagName("test.xml", "CollectionOfData");
+                SqlCommand selectCMD = new SqlCommand(sqlQuery, Connection);
+                selectCMD.CommandTimeout = 30;
+                SqlDataAdapter customerDA = new SqlDataAdapter();
+                customerDA.SelectCommand = selectCMD;
+                Connection.Open();
+                DataTable DataTable = new DataTable();
+                customerDA.Fill(DataTable);
+                Connection.Close();
 
-            sqlQuery = GetQueryViaFileAndTagName("ChargeGroup.xml", "TagName");
-
-            if (sqlWhereClause != "")
-                sqlQuery = sqlQuery.Replace("_WHERECLAUSE_", sqlWhereClause);
-
-            if (ReplaceValues != null)
-            {
-                if (ReplaceValues.Length > 0)
+                if (DataTable != null)
                 {
-                    for (int i = 0; i <= ReplaceValues.GetUpperBound(0); i++)
+                    List<Registration> InfoArray = (from DataRow dr in DataTable.Rows
+                                                    select new Registration()
+                                                    {
+                                                        UserId = Convert.ToInt64(dr["UserId"]),
+                                                        UserName = Convert.ToString(dr["UserName"]),
+                                                        LastName = Convert.ToString(dr["UserName"]),
+                                                        FirstName = Convert.ToString(dr["UserName"]),
+                                                        Email = Convert.ToString(dr["Email"]),
+                                                    }).ToList();
+                    if (InfoArray.Count > 0)
+                        homeInformationObj.RegistrationListCollectionList = InfoArray;
+                }
+                return homeInformationObj;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+                return null;
+            }
+            finally
+            {
+                Connection.Close();
+            }                    
+        }
+
+        public Registration GetCollectionSearchDataViaQuery(string sqlQuery, string[,] ReplaceValues, string[] fieldNames, string[] values, string WhereClause ,Registration homeInformationObj )
+        {
+            try
+            {
+                if (Connection == null)
+                {
+                    Connection.Open();
+                }
+                string sqlWhereClause = WhereClause;
+
+                if (fieldNames != null && values != null)
+                {
+                    for (int i = 0; i < fieldNames.Length; i++)
                     {
-                        sqlQuery = sqlQuery.Replace(ReplaceValues[i, 0], ReplaceValues[i, 1]);
+                        sqlWhereClause += " and " + fieldNames[i] + " = '" + values[i].Trim() + "'";
                     }
                 }
+
+                sqlQuery = GetQueryViaFileAndTagName("test.xml", "ValidUserOrNotDeatils");
+
+                if (sqlWhereClause != "")
+                    sqlQuery = sqlQuery.Replace("_WHERECLAUSE_", sqlWhereClause);
+
+                if (ReplaceValues != null)
+                {
+                    if (ReplaceValues.Length > 0)
+                    {
+                        for (int i = 0; i <= ReplaceValues.GetUpperBound(0); i++)
+                        {
+                            sqlQuery = sqlQuery.Replace(ReplaceValues[i, 0], ReplaceValues[i, 1]);
+                        }
+                    }
+                }
+                SqlCommand selectCMD = new SqlCommand(sqlQuery, Connection);
+                selectCMD.CommandTimeout = 30;
+                SqlDataAdapter customerDA = new SqlDataAdapter();
+                customerDA.SelectCommand = selectCMD;
+                Connection.Open();
+                DataTable DataTable = new DataTable();
+                customerDA.Fill(DataTable);
+                Connection.Close();
+
+                if (DataTable != null)
+                {
+                    List<Registration> InfoArray = (from DataRow dr in DataTable.Rows
+                                                    select new Registration()
+                                                    {
+                                                        UserId = Convert.ToInt64(dr["UserId"]),
+                                                        UserName = Convert.ToString(dr["UserName"]),
+                                                        LastName = Convert.ToString(dr["UserName"]),
+                                                        FirstName = Convert.ToString(dr["UserName"]),
+                                                        Email = Convert.ToString(dr["Email"]),
+                                                    }).ToList();
+                    if (InfoArray.Count > 0)
+                        homeInformationObj.RegistrationListCollectionList = InfoArray;
+                }
+                return homeInformationObj;
             }
-            IDataReader IDR_ChargeGroupDataReader = null;
-
-            //IDbCommand IDC_ChargeGroupDbCommand = Connection.ConnectDBCommand(DBSource);
-            IDbCommand IDC_ChargeGroupDbCommand = Connection.CreateCommand();
-            IDC_ChargeGroupDbCommand.CommandText = sqlQuery;
-            IDC_ChargeGroupDbCommand.CommandType = CommandType.Text;
-            IDC_ChargeGroupDbCommand.Connection = this.Connection;
-
-            IDR_ChargeGroupDataReader = IDC_ChargeGroupDbCommand.ExecuteReader();
-
-            if (IDR_ChargeGroupDataReader.Read())
+            catch (Exception ex)
             {
-                this.UserId = Convert.ToInt64(IDR_ChargeGroupDataReader["ChargeGroupId"]);
-                this.Address = IDR_ChargeGroupDataReader["Address"].ToString();
-                this.Name = IDR_ChargeGroupDataReader["Name"].ToString();
-
+                string msg = ex.Message;
+                return null;
             }
-            //return IDR_ChargeGroupDataReader;
-
-            if (IDR_ChargeGroupDataReader==null)
+            finally
             {
-                //return IDR_ChargeGroupDataReader;
+                Connection.Close();
             }
         }
 
