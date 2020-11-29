@@ -66,6 +66,7 @@ namespace AngulerTest.Class
                     }
                 }
                 SqlCommand command = new SqlCommand(sqlQuery, Connection);
+                Connection.Open();
                 command.CommandText = sqlQuery;
                 string message = "";
                 for (int i = 0; i < command.Parameters.Count; i++)
@@ -111,6 +112,7 @@ namespace AngulerTest.Class
                     }
                 }
                 SqlCommand command = new SqlCommand(sqlQuery, Connection);
+                Connection.Open();
                 command.CommandText = sqlQuery;
                 string message = "";
                 for (int i = 0; i < command.Parameters.Count; i++)
@@ -175,7 +177,7 @@ namespace AngulerTest.Class
                 {
                     Connection.Open();
                 }
-                sqlQuery = GetQueryViaFileAndTagName("test.xml", "CollectionOfData");
+                sqlQuery = GetQueryViaFileAndTagName("LogIn.xml", "CollectionOfData");
                 SqlCommand selectCMD = new SqlCommand(sqlQuery, Connection);
                 selectCMD.CommandTimeout = 30;
                 SqlDataAdapter customerDA = new SqlDataAdapter();
@@ -230,7 +232,7 @@ namespace AngulerTest.Class
                     }
                 }
 
-                sqlQuery = GetQueryViaFileAndTagName("test.xml", "ValidUserOrNotDeatils");
+                sqlQuery = GetQueryViaFileAndTagName("LogIn.xml", "ValidUserOrNotDeatils");
 
                 if (sqlWhereClause != "")
                     sqlQuery = sqlQuery.Replace("_WHERECLAUSE_", sqlWhereClause);
@@ -249,10 +251,10 @@ namespace AngulerTest.Class
                 selectCMD.CommandTimeout = 30;
                 SqlDataAdapter customerDA = new SqlDataAdapter();
                 customerDA.SelectCommand = selectCMD;
-                Connection.Open();
+                //Connection.Open();
                 DataTable DataTable = new DataTable();
                 customerDA.Fill(DataTable);
-                Connection.Close();
+                //Connection.Close();
 
                 if (DataTable != null)
                 {

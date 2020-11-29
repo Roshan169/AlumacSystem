@@ -24,13 +24,19 @@ namespace AlumacSystem
             ReplaceValues[0, 1] = UserName.Text;
             ReplaceValues[1, 0] = "_Password_";
             ReplaceValues[1, 1] = UserName.Text;
-            long USerId = 0;
+            long UserId = 0;
+            string User = "";
 
             Registration registration = null;
 
-            string Query = QueryObj.GetQueryViaFileAndTagName("test.xml", "CollectionOfData");
+            string Query = QueryObj.GetQueryViaFileAndTagName("LogIn.xml", "ValidUserOrNot");
+            Query = Query.Replace("_UserName_", UserName.Text.ToString());
+            Query = Query.Replace("_Password_", UserName.Text.ToString());
             if (Query != "")
-                USerId = QueryObj.GetSingleNumericValueViaQuery(Query, ReplaceValues, Connection);
+            {
+                UserId = QueryObj.GetSingleNumericValueViaQuery(Query, ReplaceValues, Connection);
+                User = QueryObj.GetSingleStringValueViaQuery(Query, ReplaceValues, Connection);
+            }
             if (Query != "")
             {
                 registration = QueryObj.GetCollectionOfDataViaQuery(Query);
@@ -45,7 +51,8 @@ namespace AlumacSystem
             {
                 registration = QueryObj.GetCollectionSearchDataViaQuery(Query, ReplaceValues, null, null,  "" , registration);
             }
-          
+            if (UserId > 0)
+                Label1.Text = "LoggedIn Sucessfully :";
 
         }
     }

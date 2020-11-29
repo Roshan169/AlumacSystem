@@ -117,12 +117,7 @@
     <Content Include="Design\Login.aspx" />
     <Content Include="Design\Registration.aspx" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
@@ -178,16 +173,16 @@
     <Compile Include="Class\UserLogIn.cs" />
     <Compile Include="CommanClass\GenerateQuery.cs" />
     <Compile Include="CommanClass\QueryDataReader.cs" />
-    <Compile Include="DesignBgLogic\Login.aspx.cs">
+    <Compile Include="DesignBackGroundLogic\Login.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="DesignBgLogic\Login.aspx.designer.cs">
+    <Compile Include="DesignBackGroundLogic\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx.cs</DependentUpon>
     </Compile>
-    <Compile Include="DesignBgLogic\Registration.aspx.cs">
+    <Compile Include="DesignBackGroundLogic\Registration.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="DesignBgLogic\Registration.aspx.designer.cs">
+    <Compile Include="DesignBackGroundLogic\Registration.aspx.designer.cs">
       <DependentUpon>Registration.aspx.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
@@ -209,7 +204,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Collection\" />
-    <Folder Include="Template\" />
+    <Folder Include="Component\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

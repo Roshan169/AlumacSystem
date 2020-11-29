@@ -14,7 +14,13 @@
             <asp:TextBox ID="UserName" runat="server"></asp:TextBox>
             <br />
             <br />
-            <asp:Button ID="LoginUser" runat="server" OnClick="LoginUser_Click" Text="Login" />
+            <asp:Button ID="LoginUser" runat="server" OnClick="LoginUser_Click" Text="Login" style="height: 26px" />
+            <br />
+            <br />
+            <br />
+            <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Label ID="LoginSucessfull" runat="server"></asp:Label>
         </div>
     </form>
 </body>

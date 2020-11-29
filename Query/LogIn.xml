@@ -1,8 +1,12 @@
 <Query>
 
 <ValidUserOrNot>
-    Select UserName  from UserLogin where UserName = '_UserName_'
-  </ValidUserOrNot>
+  Select UserId  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
+</ValidUserOrNot>
+  
+  <ValidUserOrNotUserName>
+    Select UserName  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
+  </ValidUserOrNotUserName>
 
 <ValidUserOrNotDeatils>
   Select UserId, UserName ,Email  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
