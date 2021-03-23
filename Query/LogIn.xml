@@ -1,7 +1,7 @@
 <Query>
 
 <ValidUserOrNot>
-  Select UserId  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
+  Select UserId  from UserLogin where UserName = '_UserName_' and Password = '_Password_'
 </ValidUserOrNot>
   
   <ValidUserOrNotUserName>

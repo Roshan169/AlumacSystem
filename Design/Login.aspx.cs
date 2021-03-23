@@ -1,4 +1,5 @@
 ﻿using AngulerTest.Class;
+using MVC.Views.Home;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -9,7 +10,7 @@ namespace AlumacSystem
 
     public partial class Login : System.Web.UI.Page
     {
-        public SqlConnection Connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AlumacSystem;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        public SqlConnection Connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AlumacSystem;Integrated Security=True");
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -18,12 +19,17 @@ namespace AlumacSystem
 
         protected void LoginUser_Click(object sender, EventArgs e)
         {
+
+            Registrations registrationObj = new Registrations();
+            string Pass = registrationObj.encryptpass(Password.Text);
+
+
             GenerateQuery QueryObj = new GenerateQuery();
             string[,] ReplaceValues = new string[2, 2];
             ReplaceValues[0, 0] = "_UserName_";
             ReplaceValues[0, 1] = UserName.Text;
             ReplaceValues[1, 0] = "_Password_";
-            ReplaceValues[1, 1] = UserName.Text;
+            ReplaceValues[1, 1] = Pass;
             long UserId = 0;
             string User = "";
 
@@ -31,7 +37,7 @@ namespace AlumacSystem
 
             string Query = QueryObj.GetQueryViaFileAndTagName("LogIn.xml", "ValidUserOrNot");
             Query = Query.Replace("_UserName_", UserName.Text.ToString());
-            Query = Query.Replace("_Password_", UserName.Text.ToString());
+            Query = Query.Replace("_Password_", Pass.ToString());
             if (Query != "")
             {
                 UserId = QueryObj.GetSingleNumericValueViaQuery(Query, ReplaceValues, Connection);
@@ -51,8 +57,8 @@ namespace AlumacSystem
             {
                 registration = QueryObj.GetCollectionSearchDataViaQuery(Query, ReplaceValues, null, null,  "" , registration);
             }
-            if (UserId > 0)
-                Label1.Text = "LoggedIn Sucessfully :";
+            //if (UserId > 0)
+                //Alert( "LoggedIn Sucessfully :");
 
         }
     }
