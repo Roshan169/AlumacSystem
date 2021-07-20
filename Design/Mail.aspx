@@ -1,4 +1,6 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Registrations.aspx.cs" Inherits="MVC.Views.Home.Registrations" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Mail.aspx.cs" Inherits="MVC.Views.Home.Mail" %>
+
+<%@ Register Assembly="CrystalDecisions.Web, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
 
 <!DOCTYPE html>
 
@@ -36,12 +38,6 @@
             width: 325px;
             margin-left: 40px;
         }
-
-        .floating-input:focus ~ label, .floating-input:not(:placeholder-shown) ~ label {
-            top: -18px;
-            align-content: center;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -57,48 +53,53 @@
                 <br />
                 <br />
                 <div class="floating-label">
-                    <asp:TextBox class="floating-input" ID="UserName" runat="server" type="text" placeholder=" " Font-Bold="True"></asp:TextBox>
-                    <label>Admin Name </label>
+                    <asp:TextBox class="floating-input" ID="txtto" runat="server" type="text" placeholder=" " Font-Bold="True"></asp:TextBox>
+                    <label>Enter Receiver Email</label>
                 </div>
+
                 <br />
                 <br />
                 <div class="floating-label">
-                    <asp:TextBox class="floating-input" ID="FirstName" runat="server" type="text" placeholder=" " Font-Bold="True"></asp:TextBox>
-                    <label>First Name </label>
-                </div>
-                <br />
-                <br />
-                <div class="floating-label">
-                    <asp:TextBox class="floating-input" ID="LastName" runat="server" type="text" placeholder=" " Font-Bold="True"></asp:TextBox>
-                    <label>Last Name </label>
+                    <asp:TextBox class="floating-input" ID="txtsub" runat="server" type="text" placeholder=" " Font-Bold="True"></asp:TextBox>
+                    <label>Enter Subject</label>
                 </div>
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <br />
                 <div class="floating-label">
-                    <asp:TextBox class="floating-input" ID="Email" runat="server" type="text" placeholder=" " Font-Bold="True"></asp:TextBox>
-                    <label>Email </label>
+                    <asp:TextBox class="floating-input" ID="txtmsg" Name="txtmsg" runat="server" type="text" placeholder=" " Font-Bold="True"></asp:TextBox>
+                    <label>Enter Message </label>
                 </div>
                 <br />
                 <br />
-                <div class="floating-label">
-                    <asp:TextBox class="floating-input" runat="server" ID="Password" type="password" placeholder=" " Font-Bold="True"></asp:TextBox>
-                    <label>Password </label>
-                </div>
 
-                <br />
-                <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                    <asp:Button ID="Button1" runat="server" Style="margin-left: -99px" Width="265px" Height="30px" OnClick="Button1_Click" Text="Register" BackColor="#00CC00" />
                 &nbsp;
             </div>
-
-             <asp:Button ID="Button2" runat="server"   Style="margin-left: -99px" Width="265px" Height="30px" OnClick="SendMail_Click" Text="Send Mail" BackColor="#00CC00" />
-
         </div>
 
+        <div>
 
+            <CR:CrystalReportViewer ID="UserReportId" runat="server" AutoDataBind="true" Width="450" Height="250" />
+            <br />
+            <br />
+            <br />
+
+            <asp:RadioButtonList ID="rbFormat" runat="server" RepeatDirection="Horizontal">
+                <asp:ListItem Text="Word" Value="Word" Selected="True" />
+                <asp:ListItem Text="Excel" Value="Excel" />
+                <asp:ListItem Text="PDF" Value="PDF" />
+                <asp:ListItem Text="CSV" Value="CSV" />
+            </asp:RadioButtonList>
+            <br />
+            <br />
+            <asp:Button Text="Print" runat="server" OnClick="Print" />
+            <br />
+            <br />
+            <asp:Button Text="Send" runat="server" OnClick="Email" />
+        </div>
     </form>
-    <form>
+
 </body>
 </html>

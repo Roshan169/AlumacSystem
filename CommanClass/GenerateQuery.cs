@@ -1,11 +1,13 @@
 using AlumacSystem;
 using AngulerTest.Class;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -14,8 +16,8 @@ namespace AngulerTest.Class
 {
     class GenerateQuery
     {
-        SqlConnection Connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AlumacSystem;Integrated Security=True");
-
+       public NpgsqlConnection Connection = new NpgsqlConnection("Host=localhost;Username=postgres;Password=ffadmin;Database=postgres");
+        
         public string GetQueryViaFileAndTagName(string FileName, string TagName)
         {
             try
@@ -55,6 +57,7 @@ namespace AngulerTest.Class
                 {
                     Connection.Open();
                 }
+
                 if (ReplaceValues != null)
                 {
                     if (ReplaceValues.Length > 0)
@@ -65,8 +68,8 @@ namespace AngulerTest.Class
                         }
                     }
                 }
-                SqlCommand command = new SqlCommand(sqlQuery, Connection);
                 Connection.Open();
+                NpgsqlCommand command = new NpgsqlCommand(sqlQuery, Connection);
                 command.CommandText = sqlQuery;
                 string message = "";
                 for (int i = 0; i < command.Parameters.Count; i++)
@@ -111,7 +114,7 @@ namespace AngulerTest.Class
                         }
                     }
                 }
-                SqlCommand command = new SqlCommand(sqlQuery, Connection);
+                NpgsqlCommand command = new NpgsqlCommand(sqlQuery, Connection);
                 Connection.Open();
                 command.CommandText = sqlQuery;
                 string message = "";
@@ -147,7 +150,7 @@ namespace AngulerTest.Class
                 }
 
                 DataTable DataTable = new DataTable("DataTable");
-                SqlDataAdapter adapter = new SqlDataAdapter(sqlQuery, Connection);
+                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(sqlQuery, Connection);
                 DataSet dataSetObj = new DataSet();
                 adapter.Fill(dataSetObj);
                 if (dataSetObj != null)
@@ -178,15 +181,13 @@ namespace AngulerTest.Class
                     Connection.Open();
                 }
                 sqlQuery = GetQueryViaFileAndTagName("LogIn.xml", "CollectionOfData");
-                SqlCommand selectCMD = new SqlCommand(sqlQuery, Connection);
-                selectCMD.CommandTimeout = 30;
-                SqlDataAdapter customerDA = new SqlDataAdapter();
-                customerDA.SelectCommand = selectCMD;
                 Connection.Open();
+                NpgsqlCommand selectCMD = new NpgsqlCommand(sqlQuery, Connection);
+                selectCMD.CommandTimeout = 30;
+                NpgsqlDataAdapter customerDA = new NpgsqlDataAdapter();
+                customerDA.SelectCommand = selectCMD;
                 DataTable DataTable = new DataTable();
                 customerDA.Fill(DataTable);
-                Connection.Close();
-
                 if (DataTable != null)
                 {
                     List<Registration> InfoArray = (from DataRow dr in DataTable.Rows
@@ -199,7 +200,7 @@ namespace AngulerTest.Class
                                                         Email = Convert.ToString(dr["Email"]),
                                                     }).ToList();
                     if (InfoArray.Count > 0)
-                        homeInformationObj.RegistrationListCollectionList = InfoArray;
+                        homeInformationObj.RegistrationCollectionList = InfoArray;
                 }
                 return homeInformationObj;
             }
@@ -247,14 +248,13 @@ namespace AngulerTest.Class
                         }
                     }
                 }
-                SqlCommand selectCMD = new SqlCommand(sqlQuery, Connection);
+                Connection.Open();
+                NpgsqlCommand selectCMD = new NpgsqlCommand(sqlQuery, Connection);
                 selectCMD.CommandTimeout = 30;
-                SqlDataAdapter customerDA = new SqlDataAdapter();
+                NpgsqlDataAdapter customerDA = new NpgsqlDataAdapter();
                 customerDA.SelectCommand = selectCMD;
-                //Connection.Open();
                 DataTable DataTable = new DataTable();
                 customerDA.Fill(DataTable);
-                //Connection.Close();
 
                 if (DataTable != null)
                 {
@@ -263,12 +263,12 @@ namespace AngulerTest.Class
                                                     {
                                                         UserId = Convert.ToInt64(dr["UserId"]),
                                                         UserName = Convert.ToString(dr["UserName"]),
-                                                        LastName = Convert.ToString(dr["UserName"]),
-                                                        FirstName = Convert.ToString(dr["UserName"]),
+                                                        LastName = Convert.ToString(dr["LastName"]),
+                                                        FirstName = Convert.ToString(dr["FirstName"]),
                                                         Email = Convert.ToString(dr["Email"]),
                                                     }).ToList();
                     if (InfoArray.Count > 0)
-                        homeInformationObj.RegistrationListCollectionList = InfoArray;
+                        homeInformationObj.RegistrationCollectionList = InfoArray;
                 }
                 return homeInformationObj;
             }

@@ -1,19 +1,47 @@
 <Query>
 
-<ValidUserOrNot>
-  Select UserId  from UserLogin where UserName = '_UserName_' and Password = '_Password_'
-</ValidUserOrNot>
-  
-  <ValidUserOrNotUserName>
-    Select UserName  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
-  </ValidUserOrNotUserName>
 
-<ValidUserOrNotDeatils>
-  Select UserId, UserName ,Email  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
-</ValidUserOrNotDeatils>
+	<ValidUserOrNot>
+		Select userid  from userlogin where username = '_UserName_' and password = '_Password_'
+	</ValidUserOrNot>
 
-<CollectionOfData>
-  Select UserId , UserName ,Email from UserLogin where UserName = 'Roshan' and Firstname='Roshan'
-</CollectionOfData>
+	<ValidUserOrNotUserName>
+		Select UserName  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
+	</ValidUserOrNotUserName>
 
+	<ValidUserOrNotDeatils>
+		Select UserId, UserName ,Email  from UserLogin where UserName = '_UserName_' and Firstname = '_UserName_'
+	</ValidUserOrNotDeatils>
+
+	<CollectionOfData>
+		Select UserId , UserName ,Email from UserLogin where UserName = 'Roshan' and Firstname='Roshan'
+	</CollectionOfData>
+	
+  <RemoteControlData>
+    Select RemoteControlSessionId , RemoteControlSession.UserId,UserName,FirstName +' '+ LastName Name,Email , Approved ,Reject from RemoteControlSession
+    inner join UserLogin on UserLogin.UserId =RemoteControlSession.UserId
+  </RemoteControlData>
+	<RemoteControlList>
+		Select RemoteControlSessionId ,FirstName ComputerName,  LastName MacAddress , Approved  from RemoteControlSession
+		inner join UserLogin on UserLogin.UserId =RemoteControlSession.UserId
+		inner join Type on Type.TypeId =UserLogin.UserTypeId
+		and Type.TypeName NOT IN ('Admin')
+	</RemoteControlList>
+	<GetUserId>
+		Select RemoteControlSession.UserId
+		from RemoteControlSession
+		inner join UserLogin on UserLogin.UserId =RemoteControlSession.UserId
+		where RemoteControlSessionId in (_RemoteControlSessionId_)
+	</GetUserId>
+<GetUserTypeList>
+	Select TypeId,TypeName from Type where ParentTypeId in (1)
+</GetUserTypeList>
+	<GetUserTypeId>
+		Select TypeId,TypeName from Type where TypeName in ('_TypeName_')
+	</GetUserTypeId>
+
+
+	<UserReport>
+		select userid , username ,firstname ,lastname, email from userlogin where userid=3
+	</UserReport>
 </Query>
