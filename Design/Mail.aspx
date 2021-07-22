@@ -85,13 +85,19 @@
             <br />
             <br />
             <br />
-
-            <asp:RadioButtonList ID="rbFormat" runat="server" RepeatDirection="Horizontal">
-                <asp:ListItem Text="Word" Value="Word" Selected="True" />
+            
+            <asp:RadioButtonList ID="rbFormat" runat="server" RepeatDirection="Horizontal" Height="51px" Width="210px">
+                <asp:ListItem Text="Word" Value="Word" Enabled="true" />
                 <asp:ListItem Text="Excel" Value="Excel" />
-                <asp:ListItem Text="PDF" Value="PDF" />
+                <asp:ListItem Text="PDF" Value="PDF" Selected="True" />
                 <asp:ListItem Text="CSV" Value="CSV" />
-            </asp:RadioButtonList>
+            </asp:RadioButtonList>&nbsp;<asp:Label ID="Label2" runat="server" Text="Word"></asp:Label>
+            &nbsp;&nbsp;
+            <asp:Label ID="Label3" runat="server" Text="Excel"></asp:Label>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Label ID="Label4" runat="server" Text="PDF"></asp:Label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Label ID="Label5" runat="server" Text="CSV"></asp:Label>
             <br />
             <br />
             <asp:Button Text="Print" runat="server" OnClick="Print" />

@@ -132,13 +132,13 @@ namespace MVC.Views.Home
             {
                 SmtpClient smtp = new SmtpClient();
                 MailMessage mail = new MailMessage();
-
+                SaveReportToPDF();
                 mail.To.Add(txtto.Text);
-                mail.From = new MailAddress("roshanyadav169@gmail.com");
+                mail.From = new MailAddress("papa");
                 mail.Subject = txtsub.Text;
                 mail.Body = txtmsg.Text;
                 rprt.Load(Server.MapPath("~\\Crystal Reports\\UserReport.rpt"));
-                mm.Attachments.Add(new Attachment(Server.MapPath("~/Crystal Reports/"), "Invoice.pdf"));
+                mail.Attachments.Add(new Attachment(Server.MapPath("~\\Crystal Reports\\Card.pdf")));
                 smtp.Host = "smtp.gmail.com";
                 smtp.Port = 587;
                 smtp.UseDefaultCredentials = false;
@@ -147,16 +147,6 @@ namespace MVC.Views.Home
 
                 smtp.Send(mail);
 
-                //mm.Subject = txtsub.Text; ;
-                //mm.Body = "RDLC Report PDF example";
-                //mm.Attachments.Add(new Attachment(ExportReportToPDF(Server.MapPath("~/Crystal Reports/"), "Invoice.pdf")));
-                //mm.IsBodyHtml = true;
-                //smtp.Host = "smtp.gmail.com";
-                //smtp.Credentials = new NetworkCredential("roshanyadav169@gmail.com", "HackRoshaner$1");
-                //smtp.UseDefaultCredentials = true;
-                //smtp.Port = 587;
-                //smtp.EnableSsl = true;
-                //smtp.Send(mm);
             }
         }
 
@@ -208,7 +198,7 @@ namespace MVC.Views.Home
                     UserReportId.ReportSource = rprt;
                     //rprt.ExportToHttpResponse(formatType, Response, false, "UserReport");
                 }
-                    ExportOptions CrExportOptions;
+                ExportOptions CrExportOptions;
                 DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
                 PdfRtfWordFormatOptions CrFormatTypeOptions = new PdfRtfWordFormatOptions();
                 CrDiskFileDestinationOptions.DiskFileName = "D:\\Roshan Project\\RequiredCommonInfo\\AlumacSystem\\AlumacSystem\\Crystal Reports\\Invoice.pdf";
@@ -218,11 +208,11 @@ namespace MVC.Views.Home
                     CrExportOptions.ExportFormatType = ExportFormatType.PortableDocFormat;
                     CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions;
                     CrExportOptions.FormatOptions = CrFormatTypeOptions;
-                    
+
                 }
                 rprt.Export();
             }
-           catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
@@ -233,6 +223,61 @@ namespace MVC.Views.Home
 
 
             return filename;
+        }
+
+        private void SaveReportToPDF()
+        {
+            try
+            {
+                rprt.Load(Server.MapPath("~\\Crystal Reports\\UserReport.rpt"));
+                string Query = QueryObj.GetQueryViaFileAndTagName("LogIn.xml", "UserReport");
+                Connection.Open();
+                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(Query, Connection);
+                DataSet dataSetObj = new DataSet();
+                adapter.Fill(dataSetObj);
+                if (dataSetObj != null)
+                {
+                    ExportFormatType formatType = ExportFormatType.NoFormat;
+                    switch (rbFormat.SelectedItem.Value = "PDF")
+                    {
+                        case "Word":
+                            formatType = ExportFormatType.WordForWindows;
+                            break;
+                        case "PDF":
+                            formatType = ExportFormatType.PortableDocFormat;
+                            break;
+                        case "Excel":
+                            formatType = ExportFormatType.Excel;
+                            break;
+                        case "CSV":
+                            formatType = ExportFormatType.CharacterSeparatedValues;
+                            break;
+                    }
+                    adapter.Fill(dataSetObj, "User");
+                    rprt.SetDataSource(dataSetObj.Tables[0]);
+                    UserReportId.ReportSource = rprt;
+                }
+                ExportOptions CrExportOptions;
+                DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
+                PdfRtfWordFormatOptions CrFormatTypeOptions = new PdfRtfWordFormatOptions();
+                CrDiskFileDestinationOptions.DiskFileName = "D:\\Roshan Project\\RequiredCommonInfo\\AlumacSystem\\AlumacSystem\\Crystal Reports\\Card.pdf";
+                CrExportOptions = rprt.ExportOptions;
+                {
+                    CrExportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
+                    CrExportOptions.ExportFormatType = ExportFormatType.PortableDocFormat;
+                    CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions;
+                    CrExportOptions.FormatOptions = CrFormatTypeOptions;
+                }
+                rprt.Export();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
         }
     }
 }
